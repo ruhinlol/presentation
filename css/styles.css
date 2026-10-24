@@ -1,0 +1,704 @@
+/* ═══════════════════════════════════════════════
+   styles.css — Prezentasiya dizayn sistemi
+   ═══════════════════════════════════════════════ */
+
+/* ── Google Fonts (latin-ext dəstəyi) ── */
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Manrope:wght@300;400;500;600;700;800&display=swap');
+
+/* ── CSS Dəyişənlər ── */
+:root {
+  --font-display: 'Space Grotesk', 'Segoe UI', system-ui, sans-serif;
+  --font-body: 'Manrope', 'Segoe UI', system-ui, sans-serif;
+
+  --color-bg: #0d0d1a;
+  --color-text: #f0f0f5;
+  --color-text-muted: rgba(240, 240, 245, 0.6);
+  --color-accent: #FF2D78;
+
+  --slide-transition: 0.8s;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+/* ── Reset & Base ── */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--color-bg);
+  color: var(--color-text);
+  overflow: hidden;
+  width: 100vw;
+  height: 100vh;
+  cursor: default;
+  user-select: none;
+}
+
+/* ── Prezentasiya konteyner ── */
+#presentation {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* ── Slayd ── */
+.slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.slide.active {
+  opacity: 1;
+  visibility: visible;
+  z-index: 2;
+}
+
+.slide.exiting {
+  z-index: 1;
+  visibility: visible;
+}
+
+/* ── Slayd fonu ── */
+.slide-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  transition: background 1.5s var(--ease-in-out);
+}
+
+/* ── Slayd şəkli və Fon Qatı ── */
+.slide-image-wrap {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.slide-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  opacity: 0.35;
+  filter: brightness(0.7) saturate(1.1);
+  transition: transform 8s linear;
+  will-change: transform;
+}
+
+/* Slayd 1-17 üçün fon şəkli video ilə qüsursuz, sıçrayışsız eyni olmalıdır */
+.slide[data-index="0"] .slide-image,
+.slide[data-index="1"] .slide-image,
+.slide[data-index="2"] .slide-image,
+.slide[data-index="3"] .slide-image,
+.slide[data-index="4"] .slide-image,
+.slide[data-index="5"] .slide-image,
+.slide[data-index="6"] .slide-image,
+.slide[data-index="7"] .slide-image,
+.slide[data-index="8"] .slide-image,
+.slide[data-index="9"] .slide-image,
+.slide[data-index="10"] .slide-image,
+.slide[data-index="11"] .slide-image,
+.slide[data-index="12"] .slide-image,
+.slide[data-index="13"] .slide-image,
+.slide[data-index="14"] .slide-image,
+.slide[data-index="15"] .slide-image,
+.slide[data-index="16"] .slide-image {
+  opacity: 1 !important;
+  filter: none !important;
+  transform: none !important;
+}
+
+/* ── Fon Qatında Oynayan Keçid Videosu (Mətnlərin/kontentin arxasında) ── */
+.slide-bg-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  z-index: 2;
+  display: none;
+  opacity: 0;
+  pointer-events: none;
+  background: transparent;
+}
+
+.slide-bg-video.playing {
+  display: block;
+  opacity: 1;
+}
+
+/* Fərqli fazalar üçün şəkil intensivliyi */
+.slide[data-phase="consumer"]:not([data-index="0"]):not([data-index="1"]):not([data-index="2"]):not([data-index="3"]):not([data-index="4"]):not([data-index="5"]):not([data-index="6"]):not([data-index="7"]):not([data-index="8"]):not([data-index="9"]):not([data-index="10"]):not([data-index="11"]) .slide-image {
+  opacity: 0.3;
+  filter: brightness(0.6) saturate(1.3);
+}
+
+.slide[data-phase="transition"]:not([data-index="12"]) .slide-image {
+  opacity: 0.25;
+  filter: brightness(0.5) saturate(0.8) blur(2px);
+}
+
+.slide[data-phase="cosmic"]:not([data-index="13"]):not([data-index="14"]):not([data-index="15"]):not([data-index="16"]) .slide-image {
+  opacity: 0.45;
+  filter: brightness(0.55) saturate(1.2);
+}
+
+/* ── Slayd məzmunu (Content Qatı — Həmişə fonun və videonun üzərində) ── */
+.slide-content {
+  position: relative;
+  z-index: 10; /* Fon və video qatından qəti şəkildə üstdə */
+  max-width: 1100px;
+  width: 90%;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 1.5rem;
+}
+
+/* ── Tipoqrafiya ── */
+.slide-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(2.2rem, 5.5vw, 5rem);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  white-space: pre-line;
+  text-shadow: 0 4px 30px rgba(0,0,0,0.6);
+}
+
+.slide-title .char {
+  display: inline-block;
+  will-change: transform, opacity;
+}
+
+.slide-title .word {
+  display: inline-block;
+  will-change: transform, opacity;
+  margin-right: 0.25em;
+}
+
+.slide-title .line-wrap {
+  display: block;
+  overflow: hidden;
+}
+
+.slide-subtitle {
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: clamp(1rem, 2.2vw, 1.6rem);
+  line-height: 1.5;
+  color: var(--color-text-muted);
+  max-width: 750px;
+  white-space: pre-line;
+  text-shadow: 0 2px 20px rgba(0,0,0,0.5);
+}
+
+/* ── Açar sözlər ── */
+.slide-keywords {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 0.5rem;
+}
+
+.keyword {
+  display: inline-block;
+  padding: 0.5rem 1.2rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 100px;
+  font-family: var(--font-body);
+  font-size: clamp(0.75rem, 1.5vw, 0.95rem);
+  font-weight: 500;
+  color: var(--color-text);
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  will-change: transform, opacity;
+}
+
+/* ── Sayğac ── */
+.counter-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+  margin-top: 1rem;
+}
+
+.counter-number {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(3rem, 8vw, 7rem);
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.counter-label {
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: clamp(0.85rem, 1.8vw, 1.2rem);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+}
+
+/* ── Element kimyəvi simvollar (slayd 9) ── */
+.elements-row {
+  display: flex;
+  gap: 2rem;
+  margin-top: 1rem;
+}
+
+.element-badge {
+  width: clamp(50px, 6vw, 80px);
+  height: clamp(50px, 6vw, 80px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid rgba(79, 195, 247, 0.4);
+  border-radius: 12px;
+  font-family: var(--font-display);
+  font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+  font-weight: 600;
+  color: #4FC3F7;
+  background: rgba(79, 195, 247, 0.08);
+  will-change: transform, opacity;
+}
+
+/* ── Naviqasiya düymələri ── */
+.nav-btn {
+  position: fixed;
+  z-index: 100;
+  bottom: 2.5rem;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.07);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 50%;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: all 0.3s var(--ease-out);
+  outline: none;
+}
+
+.nav-btn:disabled,
+.nav-btn[disabled] {
+  opacity: 0.18 !important;
+  cursor: not-allowed !important;
+  pointer-events: none !important;
+  transform: none !important;
+}
+
+.nav-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+  transform: scale(1.1);
+}
+
+.nav-btn:active {
+  transform: scale(0.95);
+}
+
+#prev-btn {
+  left: 1.5rem;
+}
+
+#next-btn {
+  right: 1.5rem;
+}
+
+.nav-btn svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* ── Progress bar ── */
+#progress-container {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.08);
+  z-index: 600; /* Video overlay üzərində görünməsi üçün */
+}
+
+#progress-fill {
+  height: 100%;
+  width: 10%;
+  border-radius: 0 2px 2px 0;
+  transition: width 0.6s var(--ease-out), background 0.6s var(--ease-out);
+  will-change: width;
+}
+
+/* ── Slayd sayğacı ── */
+#slide-counter {
+  position: fixed;
+  bottom: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.4);
+  letter-spacing: 0.2em;
+  z-index: 600; /* Video overlay üzərində görünməsi üçün */
+}
+
+
+/* Video oynadılan müddətdə naviqasiya düymələri deaktiv olsun */
+body.video-transition-active .nav-btn {
+  pointer-events: none !important;
+  opacity: 0.2 !important;
+  cursor: not-allowed !important;
+}
+
+/* ── Audio toggle düyməsi ── */
+.audio-toggle {
+  position: fixed;
+  top: 1.5rem;
+  right: 1.5rem;
+  bottom: auto;
+  left: auto;
+  z-index: 150;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.audio-toggle:hover {
+  background: rgba(255, 255, 255, 0.18);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: scale(1.08);
+}
+
+.audio-toggle.playing {
+  border-color: rgba(255, 45, 120, 0.5);
+  box-shadow: 0 0 15px rgba(255, 45, 120, 0.35), 0 4px 20px rgba(0, 0, 0, 0.4);
+  animation: audioPulse 2.5s infinite ease-in-out;
+}
+
+@keyframes audioPulse {
+  0%, 100% {
+    box-shadow: 0 0 12px rgba(255, 45, 120, 0.3), 0 4px 20px rgba(0, 0, 0, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 22px rgba(255, 45, 120, 0.65), 0 4px 20px rgba(0, 0, 0, 0.4);
+  }
+}
+
+.audio-toggle svg {
+  width: 20px;
+  height: 20px;
+  transition: transform 0.2s ease;
+}
+
+/* ── Speaker Notes paneli ── */
+#speaker-notes {
+  position: fixed;
+  top: 0;
+  right: -420px;
+  width: 400px;
+  height: 100vh;
+  background: rgba(10, 10, 20, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+  z-index: 200;
+  padding: 2rem 1.5rem;
+  overflow-y: auto;
+  transition: right 0.5s var(--ease-out);
+}
+
+#speaker-notes.visible {
+  right: 0;
+}
+
+#speaker-notes h3 {
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: rgba(255, 255, 255, 0.4);
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+#notes-content {
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.75);
+  white-space: pre-wrap;
+}
+
+/* ── Starfield canvas ── */
+#starfield {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 3;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 1.5s var(--ease-in-out);
+}
+
+#starfield.visible {
+  opacity: 1;
+}
+
+/* ── Vignette overlay ── */
+.vignette {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.6) 100%);
+  pointer-events: none;
+}
+
+/* ── Accent glow (hər slayda fərqli) ── */
+.accent-glow {
+  position: absolute;
+  z-index: 1;
+  width: 60vw;
+  height: 60vh;
+  border-radius: 50%;
+  filter: blur(120px);
+  opacity: 0.15;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+.accent-glow.top-left {
+  top: -20%;
+  left: -15%;
+}
+
+.accent-glow.bottom-right {
+  bottom: -20%;
+  right: -15%;
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .slide-content {
+    width: 95%;
+    padding: 1.5rem 1rem;
+    gap: 1rem;
+  }
+
+  .slide-keywords {
+    gap: 0.5rem;
+  }
+
+  .keyword {
+    padding: 0.35rem 0.8rem;
+    font-size: 0.75rem;
+  }
+
+  .nav-btn {
+    width: 40px;
+    height: 40px;
+    bottom: 2rem;
+  }
+
+  #prev-btn { left: 1rem; }
+  #next-btn { right: 1rem; }
+
+  .elements-row {
+    gap: 1rem;
+  }
+
+  #speaker-notes {
+    width: 100%;
+    right: -100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .slide-title {
+    font-size: clamp(1.8rem, 7vw, 2.5rem);
+  }
+
+  .slide-subtitle {
+    font-size: clamp(0.85rem, 3.5vw, 1.1rem);
+  }
+
+  .counter-number {
+    font-size: clamp(2.5rem, 12vw, 4rem);
+  }
+}
+
+/* ── Tam ekran üçün ── */
+:fullscreen body,
+:-webkit-full-screen body,
+:-moz-full-screen body {
+  cursor: none;
+}
+
+:fullscreen body:hover,
+:-webkit-full-screen body:hover,
+:-moz-full-screen body:hover {
+  cursor: default;
+}
+
+/* ── Prefers reduced motion ── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .slide-image {
+    transition: none !important;
+  }
+}
+
+/* ── Scrollbar gizlət ── */
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+}
+
+/* ── Seçim rəngləri ── */
+::selection {
+  background: rgba(124, 77, 255, 0.3);
+  color: #fff;
+}
+
+/* ── Slayd 8: Fiziki İnteraktiv Etiketlər Qatı ── */
+.falling-tags-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 4;
+  overflow: hidden;
+}
+
+.interactive-tag {
+  position: absolute;
+  pointer-events: auto;
+  background: var(--tag-color, #FF3B30);
+  color: #fff;
+  border-radius: 4px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4), inset 0 0 0 1px rgba(255, 255, 255, 0.25);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 6px 8px;
+  cursor: grab;
+  user-select: none;
+  transform: rotate(var(--initial-rot, 0deg));
+  will-change: transform, opacity;
+  transition: box-shadow 0.2s, filter 0.2s;
+}
+
+.interactive-tag:hover {
+  filter: brightness(1.25);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6), 0 0 20px var(--tag-color);
+  cursor: pointer;
+}
+
+.interactive-tag .tag-string {
+  position: absolute;
+  top: -30px;
+  left: 12px;
+  width: 1.5px;
+  height: 30px;
+  background: rgba(255, 255, 255, 0.5);
+  transform-origin: bottom center;
+}
+
+.interactive-tag .tag-hole {
+  position: absolute;
+  top: 6px;
+  left: 8px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #0d0d1a;
+  border: 1.5px solid rgba(255, 255, 255, 0.4);
+}
+
+.interactive-tag .tag-label {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.72rem;
+  letter-spacing: 0.05em;
+  text-align: right;
+  line-height: 1.1;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+
+.interactive-tag .tag-barcode {
+  display: flex;
+  gap: 2px;
+  height: 10px;
+  align-items: flex-end;
+  opacity: 0.8;
+}
+
+.interactive-tag .tag-barcode span {
+  display: inline-block;
+  background: #fff;
+  height: 100%;
+}
+
+.interactive-tag .tag-barcode span:nth-child(odd) { width: 1.5px; }
+.interactive-tag .tag-barcode span:nth-child(even) { width: 3px; }
+.interactive-tag .tag-barcode span:nth-child(3) { width: 4px; }
+
+

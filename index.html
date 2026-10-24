@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="description" content="Endirim Etiketindən Ulduz Tozuna: Biz Həqiqətən Kimsəyik? — İstehlakçılıq, sosial media, sürü psixologiyası və kainat haqqında interaktiv prezentasiya.">
+  <title>Endirim Etiketindən Ulduz Tozuna — Prezentasiya</title>
+
+  <!-- Google Fonts: Space Grotesk + Manrope (latin-ext dəstəyi) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Stillər -->
+  <link rel="stylesheet" href="css/styles.css?v=20261015_rev2">
+</head>
+<body>
+
+  <!-- Prezentasiya konteyneri — slaydlar JS ilə yaradılacaq -->
+  <div id="presentation"></div>
+
+  <!-- Starfield canvas (8-10-cu slaydlar) -->
+  <canvas id="starfield"></canvas>
+
+
+  <!-- Naviqasiya düymələri -->
+  <button id="prev-btn" class="nav-btn" aria-label="Əvvəlki slayd">
+    <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg>
+  </button>
+  <button id="next-btn" class="nav-btn" aria-label="Növbəti slayd">
+    <svg viewBox="0 0 24 24"><polyline points="9 6 15 12 9 18"></polyline></svg>
+  </button>
+
+  <!-- Progress bar -->
+  <div id="progress-container">
+    <div id="progress-fill"></div>
+  </div>
+
+  <!-- Slayd sayğacı -->
+  <div id="slide-counter">01 / 17</div>
+
+  <!-- Audio kontrol -->
+  <button id="audio-btn" class="nav-btn audio-toggle" aria-label="Səsi söndür/yandır" title="M düyməsi ilə söndür/yandır">
+    <svg id="audio-icon-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M11 5L6 9H2v6h4l5 4V5z"/>
+      <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+      <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+    </svg>
+    <svg id="audio-icon-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+      <path d="M11 5L6 9H2v6h4l5 4V5z"/>
+      <line x1="23" y1="9" x2="17" y2="15"/>
+      <line x1="17" y1="9" x2="23" y2="15"/>
+    </svg>
+  </button>
+
+  <!-- Speaker Notes paneli (N düyməsi ilə aç/bağla) -->
+  <div id="speaker-notes">
+    <h3>📝 Speaker Notes</h3>
+    <div id="notes-content"></div>
+  </div>
+
+  <!-- GSAP (CDN) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+
+  <!-- Tətbiq modulları -->
+  <script src="js/slideData.js?v=20261015_rev2"></script>
+  <script src="js/fallingTags.js?v=20261015_rev2"></script>
+  <script src="js/starfield.js?v=20261015_rev2"></script>
+  <script src="js/animations.js?v=20261015_rev2"></script>
+  <script src="js/audio.js?v=20261015_rev2"></script>
+  <script src="js/app.js?v=20261015_rev2"></script>
+
+</body>
+</html>

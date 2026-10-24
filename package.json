@@ -1,0 +1,9 @@
+{
+  "name": "endirim-etiketinden-ulduz-tozuna",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Endirim Etiketindən Ulduz Tozuna — İnteraktiv Prezentasiya",
+  "scripts": {
+    "start": "serve ."
+  }
+}
