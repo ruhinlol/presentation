@@ -254,7 +254,7 @@ Gəlin indi bu səs-küyü, bu illüziyanı, insanların yaratdığı o süni ma
 
 Biz həqiqətən kimsəyik? Gəlin indi kainatın düz mərkəzinə gedək..."
 
-(M83 - "Outro" mahnısı 0:15-dəki möhtəşəm klaymaks ilə işə düşür və nəhəng kosmik faza başlayır).`
+(M83 - "Outro" mahnısı 0:00-dan 5s gecikmə ilə başlayır, partlayış 2:25-də olur).`
   },
 
   // ──── SLAYD 14 (id: 14, index 13): Ulduz Tozu (Köhnə Slayd 9) ────

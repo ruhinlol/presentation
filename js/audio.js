@@ -2,7 +2,7 @@
  * audio.js — 3 Trekli dinamik təqdimat audio sistemi
  * Trek 1: "Hand Covers Bruise" — Slayd 1-dən 11-ə qədər (index 0 - 10)
  * Trek Market: "markett.mp3" — Slayd 12-yə girdikdən 15 saniyə sonra, 45-ci saniyədən başlayır!
- * Trek 2: "M83 - Outro" — Slayd 13-dən sona qədər (index 12 - 16, 0:15-dən epik klaymaks)
+ * Trek 2: "M83 - Outro" — Slayd 13-dən sona qədər (index 12 - 16, 0:00-dan, 5s gecikmə, partlayış 2:25-də)
  */
 
 window.AudioManager = (() => {
@@ -14,10 +14,12 @@ window.AudioManager = (() => {
   let currentSlide = 0;
   let fadeInterval = null;
   let marketTimer = null;
+  let m83Timer = null;
   let marketGainNode = null;
   let audioCtx = null;
 
-  const M83_START_TIME = 35;    // 0:35 (35s) — Partlayış (3:00) 2 dəq 25 san sonra olur
+  const M83_START_TIME = 0;     // 0:00 — mahnı əvvəldən başlayır, partlayış 2:25-də
+  const M83_DELAY_MS = 5000;    // Slayd 13-ə keçdikdən 5 saniyə sonra M83 başlasın
   const MARKET_START_TIME = 45; // 45-ci saniyədən
   const MARKET_DELAY_MS = 15000; // 12-ci slayda keçdikdən 15 saniyə sonra
 
@@ -34,6 +36,14 @@ window.AudioManager = (() => {
     if (marketTimer) {
       clearTimeout(marketTimer);
       marketTimer = null;
+    }
+  }
+
+  /* ── M83 taymerini təmizlə ── */
+  function clearM83Timer() {
+    if (m83Timer) {
+      clearTimeout(m83Timer);
+      m83Timer = null;
     }
   }
 
@@ -190,6 +200,7 @@ window.AudioManager = (() => {
   function pause() {
     clearFade();
     clearMarketTimer();
+    clearM83Timer();
     if (track1) { track1.pause(); track1.volume = 1.0; }
     if (trackMarket) { trackMarket.pause(); trackMarket.volume = 1.0; }
     if (track2) { track2.pause(); track2.volume = 1.0; }
@@ -202,6 +213,7 @@ window.AudioManager = (() => {
     const prevSlide = currentSlide;
     currentSlide = slideIndex;
     clearMarketTimer();
+    clearM83Timer();
 
     // ──── Slayd 1-11 (index 0 - 10): Track 1 (Hand Covers Bruise) ────
     if (slideIndex <= 10) {
@@ -249,7 +261,7 @@ window.AudioManager = (() => {
       return;
     }
 
-    // ──── Slayd 13-17 (index 12 - 16): Track 2 (M83 - Outro, 0:15-dən) ────
+    // ──── Slayd 13-17 (index 12 - 16): Track 2 (M83 - Outro, 0:00-dan, 5s gecikmə ilə) ────
     if (slideIndex >= 12) {
       if (track1) track1.pause();
       if (trackMarket) {
@@ -258,11 +270,30 @@ window.AudioManager = (() => {
       }
 
       const t2 = getTrack2();
+
+      // İlk dəfə kosmik fazaya keçid — 5 saniyə gözlə, sonra 0:00-dan başla
       if (prevSlide < 12) {
-        t2.currentTime = M83_START_TIME; // 13-cü slayda keçid anında 0:15-dən başla
-      }
-      if (!isMuted) {
-        play();
+        t2.currentTime = M83_START_TIME; // 0:00
+        t2.pause();
+        isPlaying = false;
+        updateUI(false);
+
+        m83Timer = setTimeout(() => {
+          if (currentSlide >= 12 && !isMuted) {
+            t2.currentTime = M83_START_TIME;
+            t2.volume = 1.0;
+            t2.play().then(() => {
+              isPlaying = true;
+              updateUI(true);
+              showToast('🎵 M83 - Outro (0:00)');
+            }).catch(() => {});
+          }
+        }, M83_DELAY_MS);
+      } else {
+        // Artıq kosmik fazadadır, slaydlar arası keçiddə musiqini davam etdir
+        if (!isMuted) {
+          play();
+        }
       }
       return;
     }
@@ -279,7 +310,7 @@ window.AudioManager = (() => {
       play();
       let songName = 'Hand Covers Bruise';
       if (currentSlide === 11) songName = 'Market Xaosu (45s)';
-      else if (currentSlide >= 12) songName = 'M83 - Outro (0:15)';
+      else if (currentSlide >= 12) songName = 'M83 - Outro (0:00)';
       showToast('🔊 ' + songName);
     }
     return isMuted;
