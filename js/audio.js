@@ -17,7 +17,7 @@ window.AudioManager = (() => {
   let marketGainNode = null;
   let audioCtx = null;
 
-  const M83_START_TIME = 15;    // 0:15 (15s)
+  const M83_START_TIME = 35;    // 0:35 (35s) — Partlayış (3:00) 2 dəq 25 san sonra olur
   const MARKET_START_TIME = 45; // 45-ci saniyədən
   const MARKET_DELAY_MS = 15000; // 12-ci slayda keçdikdən 15 saniyə sonra
 
