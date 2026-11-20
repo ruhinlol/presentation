@@ -19,7 +19,7 @@ window.AudioManager = (() => {
   let audioCtx = null;
 
   const M83_START_TIME = 0;     // 0:00 — mahnı əvvəldən başlayır, partlayış 2:25-də
-  const M83_DELAY_MS = 5000;    // Slayd 13-ə keçdikdən 5 saniyə sonra M83 başlasın
+  const M83_DELAY_MS = 55000;   // Slayd 13-ə keçdikdən 55 saniyə sonra M83 başlasın
   const MARKET_START_TIME = 45; // 45-ci saniyədən
   const MARKET_DELAY_MS = 15000; // 12-ci slayda keçdikdən 15 saniyə sonra
 
