@@ -290,9 +290,15 @@ window.AudioManager = (() => {
           }
         }, M83_DELAY_MS);
       } else {
-        // Artıq kosmik fazadadır, slaydlar arası keçiddə musiqini davam etdir
-        if (!isMuted) {
-          play();
+        // Artıq kosmik fazadadır (slayd 14-17): M83 eyni yerdən davam etsin
+        // Əgər M83 artıq çalırsa — heç nə etmə, kəsmə
+        // Yalnız paused olduqda (məs. mute sonra unmute) davam etdir
+        if (!isMuted && track2 && track2.paused && !m83Timer) {
+          track2.volume = 1.0;
+          track2.play().then(() => {
+            isPlaying = true;
+            updateUI(true);
+          }).catch(() => {});
         }
       }
       return;
