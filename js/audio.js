@@ -19,7 +19,7 @@ window.AudioManager = (() => {
   let audioCtx = null;
 
   const M83_START_TIME = 0;     // 0:00 — mahnı əvvəldən başlayır, partlayış 2:25-də
-  const M83_DELAY_MS = 55000;   // Slayd 13-ə keçdikdən 55 saniyə sonra M83 başlasın
+  const M83_DELAY_MS = 85000;   // Slayd 13-ə keçdikdən 85 saniyə sonra M83 başlasın
   const MARKET_START_TIME = 45; // 45-ci saniyədən
   const MARKET_DELAY_MS = 15000; // 12-ci slayda keçdikdən 15 saniyə sonra
 
@@ -142,8 +142,8 @@ window.AudioManager = (() => {
 
   /* ── Cari slayda uyğun aktiv treki qaytar ── */
   function getActiveTrack() {
-    if (currentSlide <= 11) return getTrack1();
-    if (currentSlide === 12) return getTrackMarket();
+    if (currentSlide <= 10) return getTrack1();
+    if (currentSlide === 11) return getTrackMarket();
     return getTrack2();
   }
 
@@ -153,8 +153,8 @@ window.AudioManager = (() => {
 
     clearFade();
 
-    // Slayd 13-də birbaşa play çağırılarsa, markett trekini ifa et
-    if (currentSlide === 12) {
+    // Slayd 12-də birbaşa play çağırılarsa, markett trekini ifa et
+    if (currentSlide === 11) {
       const tm = getTrackMarket();
       if (track1) track1.pause();
       if (track2) track2.pause();
@@ -215,8 +215,8 @@ window.AudioManager = (() => {
     clearMarketTimer();
     clearM83Timer();
 
-    // ──── Slayd 1-12 (index 0 - 11): Track 1 (Hand Covers Bruise) ────
-    if (slideIndex <= 11) {
+    // ──── Slayd 1-11 (index 0 - 10): Track 1 (Hand Covers Bruise) ────
+    if (slideIndex <= 10) {
       if (trackMarket) trackMarket.pause();
       if (track2) {
         track2.pause();
@@ -228,8 +228,8 @@ window.AudioManager = (() => {
       return;
     }
 
-    // ──── Slayd 13 (index 12): Sükut + 15 saniyə sonra markett.mp3 (45s-dən) ────
-    if (slideIndex === 12) {
+    // ──── Slayd 12 (index 11): Sükut + 15 saniyə sonra markett.mp3 (45s-dən) ────
+    if (slideIndex === 11) {
       // 1. Əvvəlki musiqiləri dərhal dayandır (tam sükut)
       if (track1) track1.pause();
       if (track2) track2.pause();
@@ -242,8 +242,8 @@ window.AudioManager = (() => {
 
       // 2. 15 saniyə sonra markett.mp3-ü 45-ci saniyədən başlat
       marketTimer = setTimeout(() => {
-        // Hələ də 13-cü slayddadırsa və səs söndürülməyibsə
-        if (currentSlide === 12 && !isMuted) {
+        // Hələ də 12-ci slayddadırsa və səs söndürülməyibsə
+        if (currentSlide === 11 && !isMuted) {
           const tm = getTrackMarket();
           tm.currentTime = MARKET_START_TIME; // 45-ci saniyə
           tm.volume = 1.0;
@@ -261,8 +261,8 @@ window.AudioManager = (() => {
       return;
     }
 
-    // ──── Slayd 14-17 (index 13 - 16): Track 2 (M83 - Outro, 0:00-dan, 55s gecikmə ilə) ────
-    if (slideIndex >= 13) {
+    // ──── Slayd 13-17 (index 12 - 16): Track 2 (M83 - Outro, 0:00-dan, 85s gecikmə ilə) ────
+    if (slideIndex >= 12) {
       if (track1) track1.pause();
       if (trackMarket) {
         trackMarket.pause();
@@ -271,15 +271,15 @@ window.AudioManager = (() => {
 
       const t2 = getTrack2();
 
-      // İlk dəfə kosmik fazaya keçid — 55 saniyə gözlə, sonra 0:00-dan başla
-      if (prevSlide < 13) {
+      // İlk dəfə kosmik fazaya keçid — 85 saniyə gözlə, sonra 0:00-dan başla
+      if (prevSlide < 12) {
         t2.currentTime = M83_START_TIME; // 0:00
         t2.pause();
         isPlaying = false;
         updateUI(false);
 
         m83Timer = setTimeout(() => {
-          if (currentSlide >= 13 && !isMuted) {
+          if (currentSlide >= 12 && !isMuted) {
             t2.currentTime = M83_START_TIME;
             t2.volume = 1.0;
             t2.play().then(() => {
@@ -309,8 +309,8 @@ window.AudioManager = (() => {
       isMuted = false;
       play();
       let songName = 'Hand Covers Bruise';
-      if (currentSlide === 12) songName = 'Market Xaosu (45s)';
-      else if (currentSlide >= 13) songName = 'M83 - Outro (0:00)';
+      if (currentSlide === 11) songName = 'Market Xaosu (45s)';
+      else if (currentSlide >= 12) songName = 'M83 - Outro (0:00)';
       showToast('🔊 ' + songName);
     }
     return isMuted;
