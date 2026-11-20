@@ -7,7 +7,7 @@ const SLIDES = [
   // ──── SLAYD 1 (id: 1, index 0): Açılış (00:00 - 02:00) ────
   {
     id: 1,
-    title: "Endirim Etiketindən!\nUlduz Tozuna",
+    title: "Endirim Etiketindən!\nUlduz Tozuna!",
     subtitle: "Biz Həqiqətən Kimsəyik?",
     keywords: ["İstehlakçılıq", "Beyin Hack", "Kapitalizm"],
     image: "assets/yeni1.jpg",
